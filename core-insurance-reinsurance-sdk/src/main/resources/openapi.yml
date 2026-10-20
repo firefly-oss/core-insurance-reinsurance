@@ -1,0 +1,872 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:18080
+  description: Generated server url
+tags:
+- name: Cessions
+  description: Premium ceded from a policy to a treaty
+- name: Treaties
+  description: Reinsurance treaty or facultative placement recorded by the insurer
+- name: Reinsurance Recoveries
+  description: Claim amount notified to a treaty for recovery
+paths:
+  /api/v1/treaties/{treatyId}:
+    get:
+      tags:
+      - Treaties
+      summary: Get Treaty by id
+      description: Retrieve one Treaty
+      operationId: getTreatyById
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Treaty found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TreatyDTO"
+        "404":
+          description: Treaty not found
+    put:
+      tags:
+      - Treaties
+      summary: Update Treaty
+      description: Update an existing Treaty
+      operationId: updateTreaty
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreatyDTO"
+        required: true
+      responses:
+        "200":
+          description: Treaty updated
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TreatyDTO"
+        "400":
+          description: Invalid data
+        "404":
+          description: Treaty not found
+    delete:
+      tags:
+      - Treaties
+      summary: Delete Treaty
+      description: Delete a Treaty
+      operationId: deleteTreaty
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Treaty deleted
+        "404":
+          description: Treaty not found
+  /api/v1/treaties/{treatyId}/recoveries/{reinsuranceRecoveryId}:
+    get:
+      tags:
+      - Reinsurance Recoveries
+      summary: Get ReinsuranceRecovery by id
+      description: Retrieve one ReinsuranceRecovery
+      operationId: getReinsuranceRecoveryById
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: reinsuranceRecoveryId
+        in: path
+        description: Unique identifier of the ReinsuranceRecovery
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: ReinsuranceRecovery found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReinsuranceRecoveryDTO"
+        "404":
+          description: ReinsuranceRecovery not found
+    put:
+      tags:
+      - Reinsurance Recoveries
+      summary: Update ReinsuranceRecovery
+      description: Update an existing ReinsuranceRecovery
+      operationId: updateReinsuranceRecovery
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: reinsuranceRecoveryId
+        in: path
+        description: Unique identifier of the ReinsuranceRecovery
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReinsuranceRecoveryDTO"
+        required: true
+      responses:
+        "200":
+          description: ReinsuranceRecovery updated
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReinsuranceRecoveryDTO"
+        "400":
+          description: Invalid data
+        "404":
+          description: ReinsuranceRecovery not found
+    delete:
+      tags:
+      - Reinsurance Recoveries
+      summary: Delete ReinsuranceRecovery
+      description: Delete a ReinsuranceRecovery
+      operationId: deleteReinsuranceRecovery
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: reinsuranceRecoveryId
+        in: path
+        description: Unique identifier of the ReinsuranceRecovery
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: ReinsuranceRecovery deleted
+        "404":
+          description: ReinsuranceRecovery not found
+  /api/v1/treaties/{treatyId}/cessions/{cessionId}:
+    get:
+      tags:
+      - Cessions
+      summary: Get Cession by id
+      description: Retrieve one Cession
+      operationId: getCessionById
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: cessionId
+        in: path
+        description: Unique identifier of the Cession
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Cession found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CessionDTO"
+        "404":
+          description: Cession not found
+    put:
+      tags:
+      - Cessions
+      summary: Update Cession
+      description: Update an existing Cession
+      operationId: updateCession
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: cessionId
+        in: path
+        description: Unique identifier of the Cession
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CessionDTO"
+        required: true
+      responses:
+        "200":
+          description: Cession updated
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CessionDTO"
+        "400":
+          description: Invalid data
+        "404":
+          description: Cession not found
+    delete:
+      tags:
+      - Cessions
+      summary: Delete Cession
+      description: Delete a Cession
+      operationId: deleteCession
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: cessionId
+        in: path
+        description: Unique identifier of the Cession
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Cession deleted
+        "404":
+          description: Cession not found
+  /api/v1/treaties:
+    post:
+      tags:
+      - Treaties
+      summary: Create Treaty
+      description: Create a Treaty
+      operationId: createTreaty
+      parameters:
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreatyDTO"
+        required: true
+      responses:
+        "201":
+          description: Treaty created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TreatyDTO"
+        "400":
+          description: Invalid data
+  /api/v1/treaties/{treatyId}/recoveries:
+    post:
+      tags:
+      - Reinsurance Recoveries
+      summary: Create ReinsuranceRecovery
+      description: Create a ReinsuranceRecovery
+      operationId: createReinsuranceRecovery
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReinsuranceRecoveryDTO"
+        required: true
+      responses:
+        "201":
+          description: ReinsuranceRecovery created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReinsuranceRecoveryDTO"
+        "400":
+          description: Invalid data
+  /api/v1/treaties/{treatyId}/recoveries/filter:
+    post:
+      tags:
+      - Reinsurance Recoveries
+      summary: Filter reinsuranceRecoveries
+      description: Retrieve a page of reinsuranceRecoveries matching the filter
+      operationId: filterReinsuranceRecoveries
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilterRequestReinsuranceRecoveryDTO"
+        required: true
+      responses:
+        "200":
+          description: Page of matching records
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaginationResponseReinsuranceRecoveryDTO"
+        "400":
+          description: Invalid filter request
+  /api/v1/treaties/{treatyId}/cessions:
+    post:
+      tags:
+      - Cessions
+      summary: Create Cession
+      description: Create a Cession
+      operationId: createCession
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CessionDTO"
+        required: true
+      responses:
+        "201":
+          description: Cession created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CessionDTO"
+        "400":
+          description: Invalid data
+  /api/v1/treaties/{treatyId}/cessions/filter:
+    post:
+      tags:
+      - Cessions
+      summary: Filter cessions
+      description: Retrieve a page of cessions matching the filter
+      operationId: filterCessions
+      parameters:
+      - name: treatyId
+        in: path
+        description: Unique identifier of the Treaty
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilterRequestCessionDTO"
+        required: true
+      responses:
+        "200":
+          description: Page of matching records
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaginationResponseCessionDTO"
+        "400":
+          description: Invalid filter request
+  /api/v1/treaties/filter:
+    post:
+      tags:
+      - Treaties
+      summary: Filter treaties
+      description: Retrieve a page of treaties matching the filter
+      operationId: filterTreaties
+      parameters:
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilterRequestTreatyDTO"
+        required: true
+      responses:
+        "200":
+          description: Page of matching records
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaginationResponseTreatyDTO"
+        "400":
+          description: Invalid filter request
+components:
+  schemas:
+    TreatyDTO:
+      required:
+      - effectiveFrom
+      - lineOfBusiness
+      - reinsurerPartyId
+      - tenantId
+      - treatyNumber
+      - treatyStatus
+      - treatyType
+      type: object
+      properties:
+        treatyId:
+          type: string
+          format: uuid
+          readOnly: true
+        tenantId:
+          type: string
+          format: uuid
+        treatyNumber:
+          maxLength: 64
+          minLength: 0
+          type: string
+        contractId:
+          type: string
+          format: uuid
+        reinsurerPartyId:
+          type: string
+          format: uuid
+        treatyType:
+          type: string
+          enum:
+          - QUOTA_SHARE
+          - SURPLUS
+          - EXCESS_OF_LOSS
+          - FACULTATIVE
+        lineOfBusiness:
+          type: string
+          enum:
+          - MOTOR
+          - PROPERTY
+          - LIABILITY
+          - LIFE
+          - HEALTH
+          - MARINE
+          - AVIATION
+          - ACCIDENT
+          - OTHER
+        effectiveFrom:
+          type: string
+          format: date
+        effectiveTo:
+          type: string
+          format: date
+        treatyStatus:
+          type: string
+          enum:
+          - DRAFT
+          - ACTIVE
+          - RUN_OFF
+          - EXPIRED
+        cessionRate:
+          type: number
+        currency:
+          pattern: "[A-Z]{3}"
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ReinsuranceRecoveryDTO:
+      required:
+      - claimId
+      - notifiedAt
+      - recoveryAmount
+      - recoveryStatus
+      - treatyId
+      type: object
+      properties:
+        reinsuranceRecoveryId:
+          type: string
+          format: uuid
+          readOnly: true
+        treatyId:
+          type: string
+          format: uuid
+        claimId:
+          type: string
+          format: uuid
+        recoveryAmount:
+          type: number
+        currency:
+          pattern: "[A-Z]{3}"
+          type: string
+        recoveryStatus:
+          type: string
+          enum:
+          - NOTIFIED
+          - AGREED
+          - COLLECTED
+          - DISPUTED
+        notifiedAt:
+          type: string
+          format: date-time
+        paymentOrderId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CessionDTO:
+      required:
+      - cededAt
+      - cededPremium
+      - cessionStatus
+      - policyId
+      - treatyId
+      type: object
+      properties:
+        cessionId:
+          type: string
+          format: uuid
+          readOnly: true
+        treatyId:
+          type: string
+          format: uuid
+        policyId:
+          type: string
+          format: uuid
+        premiumScheduleId:
+          type: string
+          format: uuid
+        cededPremium:
+          type: number
+        currency:
+          pattern: "[A-Z]{3}"
+          type: string
+        cessionStatus:
+          type: string
+          enum:
+          - RECORDED
+          - BORDEREAU
+          - SETTLED
+        cededAt:
+          type: string
+          format: date-time
+        paymentOrderId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    FilterOptions:
+      type: object
+      properties:
+        caseInsensitiveStrings:
+          type: boolean
+        includeInheritedFields:
+          type: boolean
+      description: Filter options for customizing filter behavior
+    FilterRequestReinsuranceRecoveryDTO:
+      required:
+      - pagination
+      type: object
+      properties:
+        filters:
+          $ref: "#/components/schemas/ReinsuranceRecoveryDTO"
+        rangeFilters:
+          $ref: "#/components/schemas/RangeFilter"
+        pagination:
+          $ref: "#/components/schemas/PaginationRequest"
+        options:
+          $ref: "#/components/schemas/FilterOptions"
+      description: Filter criteria
+    PaginationRequest:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The zero-based page number to retrieve.
+          format: int32
+          example: 0
+          default: 0
+        pageSize:
+          type: integer
+          description: The number of items per page.
+          format: int32
+          example: 10
+          default: 10
+        sortBy:
+          type: string
+          description: The field to sort the results by.
+          example: name
+        sortDirection:
+          type: string
+          description: "The direction of sorting, either ASC or DESC."
+          example: DESC
+          default: DESC
+      description: "Represents a pagination request for retrieving paginated results,\
+        \ including page number, size, sort field, and direction."
+    RangeFilter:
+      type: object
+      properties:
+        ranges:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/RangeObject"
+          description: Map of field names to their range criteria
+      description: Represents range filters for numeric fields
+    RangeObject:
+      type: object
+      properties:
+        from:
+          type: object
+          description: Start value of the range
+        to:
+          type: object
+          description: End value of the range
+      description: Represents a range with from and to values
+    PaginationResponseReinsuranceRecoveryDTO:
+      type: object
+      properties:
+        content:
+          type: array
+          description: The list of items for the current page.
+          items:
+            $ref: "#/components/schemas/ReinsuranceRecoveryDTO"
+        totalElements:
+          type: integer
+          description: The total number of elements across all pages.
+          format: int64
+        totalPages:
+          type: integer
+          description: The total number of pages based on the data size and page size.
+          format: int32
+        currentPage:
+          type: integer
+          description: "The current page number, typically zero-based."
+          format: int32
+      description: Represents a paginated response containing a list of items and
+        pagination metadata.
+    FilterRequestCessionDTO:
+      required:
+      - pagination
+      type: object
+      properties:
+        filters:
+          $ref: "#/components/schemas/CessionDTO"
+        rangeFilters:
+          $ref: "#/components/schemas/RangeFilter"
+        pagination:
+          $ref: "#/components/schemas/PaginationRequest"
+        options:
+          $ref: "#/components/schemas/FilterOptions"
+      description: Filter criteria
+    PaginationResponseCessionDTO:
+      type: object
+      properties:
+        content:
+          type: array
+          description: The list of items for the current page.
+          items:
+            $ref: "#/components/schemas/CessionDTO"
+        totalElements:
+          type: integer
+          description: The total number of elements across all pages.
+          format: int64
+        totalPages:
+          type: integer
+          description: The total number of pages based on the data size and page size.
+          format: int32
+        currentPage:
+          type: integer
+          description: "The current page number, typically zero-based."
+          format: int32
+      description: Represents a paginated response containing a list of items and
+        pagination metadata.
+    FilterRequestTreatyDTO:
+      required:
+      - pagination
+      type: object
+      properties:
+        filters:
+          $ref: "#/components/schemas/TreatyDTO"
+        rangeFilters:
+          $ref: "#/components/schemas/RangeFilter"
+        pagination:
+          $ref: "#/components/schemas/PaginationRequest"
+        options:
+          $ref: "#/components/schemas/FilterOptions"
+      description: Filter criteria
+    PaginationResponseTreatyDTO:
+      type: object
+      properties:
+        content:
+          type: array
+          description: The list of items for the current page.
+          items:
+            $ref: "#/components/schemas/TreatyDTO"
+        totalElements:
+          type: integer
+          description: The total number of elements across all pages.
+          format: int64
+        totalPages:
+          type: integer
+          description: The total number of pages based on the data size and page size.
+          format: int32
+        currentPage:
+          type: integer
+          description: "The current page number, typically zero-based."
+          format: int32
+      description: Represents a paginated response containing a list of items and
+        pagination metadata.
