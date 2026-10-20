@@ -47,7 +47,7 @@ import org.springframework.web.reactive.config.EnableWebFlux;
                 )
         ),
         servers = {
-                @Server(url = "https://openplatform.fireflysoftware.io/reinsurance", description = "OpenPlatform"),
+                @Server(url = "https://openplatform.fireflysoftware.io/core-insurance-reinsurance", description = "OpenPlatform"),
                 @Server(url = "/", description = "Local Development Environment")
         }
 )
