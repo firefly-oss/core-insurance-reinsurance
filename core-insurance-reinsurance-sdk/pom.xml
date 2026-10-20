@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>core-insurance-reinsurance-sdk</artifactId>
+    <name>core-insurance-reinsurance-sdk</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
