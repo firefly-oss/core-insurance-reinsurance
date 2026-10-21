@@ -1,9 +1,9 @@
 <a href="https://fireflysoftware.io/openplatform/">
 <picture>
-  <source media="(max-width: 640px) and (prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-narrow-dark.svg">
-  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-narrow-light.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-dark.svg">
-  <img src="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-light.svg" alt="Firefly OpenPlatform - Core Insurance - Reinsurance" width="100%">
+  <source media="(max-width: 640px) and (prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-narrow-dark.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-narrow-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-dark.svg">
+  <img src="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-light.svg" alt="Firefly OpenPlatform - Core Insurance - Reinsurance" width="100%">
 </picture>
 </a>
 
@@ -19,7 +19,9 @@ Repository: [https://github.com/firefly-oss/core-insurance-reinsurance](https://
 
 Stores the cession and the recovery the insurer records. Placement, pricing, and the reinsurer's acceptance stay with the reinsurer. Premium cash movement stays in core-banking-payments.
 
-This is a **core** service. It owns its tables and exposes a reactive CRUD API. It does not call other core services. Domain orchestration is intentionally not in this repository.
+This is a **core** service. It owns its tables and exposes a reactive API. It does not call other core services. Domain orchestration is intentionally not in this repository.
+
+A treaty follows an explicit status lifecycle. `DRAFT` may become `ACTIVE`. `ACTIVE` may become `RUN_OFF` or `EXPIRED`. `RUN_OFF` may become `EXPIRED`. `EXPIRED` stays on file. Only a `DRAFT` treaty can be removed. An active treaty stays on file.
 
 ## What it does not own
 
@@ -93,7 +95,7 @@ Fields that point at another Firefly service are logical references. Foreign key
 | POST | `/api/v1/treaties` | Create a Treaty |
 | GET | `/api/v1/treaties/{treatyId}` | Get a Treaty |
 | PUT | `/api/v1/treaties/{treatyId}` | Update a Treaty |
-| DELETE | `/api/v1/treaties/{treatyId}` | Delete a Treaty |
+| DELETE | `/api/v1/treaties/{treatyId}` | Delete a draft treaty. An active treaty stays on file |
 | POST | `/api/v1/treaties/{treatyId}/cessions/filter` | Filter cessions |
 | POST | `/api/v1/treaties/{treatyId}/cessions` | Create a Cession |
 | GET | `/api/v1/treaties/{treatyId}/cessions/{cessionId}` | Get a Cession |
