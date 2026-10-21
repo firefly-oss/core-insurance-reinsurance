@@ -24,6 +24,7 @@ import org.fireflyframework.web.error.exceptions.ResourceNotFoundException;
 import io.fireflysoftware.core.insurance.reinsurance.core.mappers.TreatyMapper;
 import io.fireflysoftware.core.insurance.reinsurance.core.services.TreatyService;
 import io.fireflysoftware.core.insurance.reinsurance.interfaces.dtos.TreatyDTO;
+import io.fireflysoftware.core.insurance.reinsurance.interfaces.enums.TreatyStatus;
 import io.fireflysoftware.core.insurance.reinsurance.models.entities.Treaty;
 import io.fireflysoftware.core.insurance.reinsurance.models.repositories.TreatyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,11 @@ public class TreatyServiceImpl implements TreatyService {
     public Mono<TreatyDTO> createTreaty(TreatyDTO dto) {
         return Mono.just(dto)
                 .map(mapper::toEntity)
+                .doOnNext(entity -> {
+                    if (entity.getTreatyStatus() == null) {
+                        entity.setTreatyStatus(TreatyStatus.DRAFT);
+                    }
+                })
                 .flatMap(repository::save)
                 .map(mapper::toDTO);
     }
@@ -61,8 +67,19 @@ public class TreatyServiceImpl implements TreatyService {
         return repository.findById(treatyId)
                 .switchIfEmpty(Mono.error(ResourceNotFoundException.forResource("Treaty", treatyId.toString())))
                 .flatMap(existing -> {
+                    TreatyStatus current = existing.getTreatyStatus() != null
+                            ? existing.getTreatyStatus()
+                            : TreatyStatus.DRAFT;
                     mapper.updateEntityFromDto(dto, existing);
                     existing.setTreatyId(treatyId);
+                    TreatyStatus next = existing.getTreatyStatus() != null
+                            ? existing.getTreatyStatus()
+                            : current;
+                    if (!TreatyLifecycle.canTransition(current, next)) {
+                        return Mono.error(new IllegalStateException(
+                                "Treaty " + treatyId + " cannot move from " + current + " to " + next));
+                    }
+                    existing.setTreatyStatus(next);
                     return repository.save(existing);
                 })
                 .map(mapper::toDTO);
@@ -72,7 +89,17 @@ public class TreatyServiceImpl implements TreatyService {
     public Mono<Void> deleteTreaty(UUID treatyId) {
         return repository.findById(treatyId)
                 .switchIfEmpty(Mono.error(ResourceNotFoundException.forResource("Treaty", treatyId.toString())))
-                .flatMap(existing -> repository.deleteById(treatyId));
+                .flatMap(existing -> {
+                    TreatyStatus status = existing.getTreatyStatus() != null
+                            ? existing.getTreatyStatus()
+                            : TreatyStatus.DRAFT;
+                    if (status != TreatyStatus.DRAFT) {
+                        return Mono.error(new IllegalStateException(
+                                "Treaty " + treatyId + " is " + status
+                                        + " and cannot be deleted; expire it so the treaty history is kept"));
+                    }
+                    return repository.deleteById(treatyId);
+                });
     }
 
     @Override
